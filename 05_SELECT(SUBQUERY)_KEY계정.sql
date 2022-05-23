@@ -335,3 +335,59 @@ FROM (SELECT DEPT_CODE "부서코드", ROUND(AVG(SALARY)) "평균급여"
          GROUP BY DEPT_CODE
          ORDER BY 2 DESC) E
 WHERE ROWNUM <= 3;
+
+-- 4) 전 직원 중 입사일이 빠른 순 중에서 5위까지 조회
+SELECT ROWNUM, E.*
+FROM (SELECT EMP_NAME, HIRE_DATE
+        FROM EMPLOYEE
+        ORDER BY HIRE_DATE ASC) E
+WHERE ROWNUM <= 5;
+
+-- 5) 전 직원 중 입사일이 느린 순 중에서 10위까지 조회
+SELECT *
+FROM (SELECT EMP_NAME, HIRE_DATE
+        FROM EMPLOYEE
+        ORDER BY HIRE_DATE DESC)
+WHERE ROWNUM <= 10;
+
+-- 6) 전 직원 중 연봉이 가장 낮은 사람 5위까지 조회 (사원명, 직급명, 부서명 조회)
+SELECT ROWNUM 순번, E.*
+FROM (SELECT EMP_NAME "사원명", J.JOB_NAME "직급", D.DEPT_TITLE "부서명", SALARY * 12 "연봉"
+        FROM EMPLOYEE E
+        JOIN JOB J ON (E.JOB_CODE = J.JOB_CODE)
+        JOIN DEPARTMENT D ON (E.DEPT_CODE = D.DEPT_ID)
+        ORDER BY 연봉) E
+WHERE ROWNUM <= 5;
+
+--------------------------------------------------------------------------------
+/*
+    * 순위 매기는 함수 (WINDOW FUNTION)    ==> SELECT 절에만 서술 가능!!! WHERE절 불가능
+    RANK() OVER(정렬기준) | DENSE_RANK() OVER(정렬기준)
+    
+    - RANK() OVER(정렬기준) : 동일한 순위의 등수를 동일한 인원 수 만큼 건너띄고 순위 계산
+                            EX) 1위가 3명인 경우 : 1, 1, 1, 4 위로 함
+    - DENSE() OVER(정렬기준) : 동일한 순위의 등수가 있다 해도 그 다음 등수를 무조건 1 증가시킨 순위
+                            EX) 1위가 3명인 경우 : 1, 1, 1, 2 위로 함
+                        
+*/  
+-- 연봉이 높은 순대로 순위를 매겨서 조회
+SELECT EMP_NAME, SALARY * 12, RANK() OVER(ORDER BY SALARY * 12 DESC) "연봉"
+FROM EMPLOYEE;
+-->> RANK() OVER(정렬기준) : 공동 19위가 있음 -> 19, 19, 21로 조회됨
+
+SELECT EMP_NAME, SALARY * 12, DENSE_RANK() OVER(ORDER BY SALARY * 12 DESC) "연봉"
+FROM EMPLOYEE;
+-->> DENSE_RANK() OVER(정렬기준) : 공동 19위가 있음 -> 19, 19, 20로 조회됨
+
+-- 급여가 높은 상위 5위만 조회
+-- RANK() OVER(정렬기준)
+SELECT *
+FROM (SELECT EMP_NAME, SALARY, RANK() OVER(ORDER BY SALARY DESC) "순위"
+        FROM EMPLOYEE)
+WHERE ROWNUM <= 5;
+
+-- DENSE_RANK() OVER(정렬기준)
+SELECT *
+FROM (SELECT EMP_NAME, SALARY, DENSE_RANK() OVER(ORDER BY SALARY DESC) "순위"
+        FROM EMPLOYEE)
+WHERE ROWNUM <= 5;
