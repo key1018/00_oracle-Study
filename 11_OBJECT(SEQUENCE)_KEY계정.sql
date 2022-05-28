@@ -137,15 +137,3 @@ INSERT INTO EMPLOYEE_COPY
           , 4200000
           );
 
-
-
-
-
-
-
-
-
-
-
-
-
