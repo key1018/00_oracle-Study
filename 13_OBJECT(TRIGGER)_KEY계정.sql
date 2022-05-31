@@ -66,11 +66,14 @@ CREATE TABLE TB_PRODUCT
     STOCK NUMBER DEFAULT 0 NOT NULL
 );
 
+DROP TABLE TB_PRODUCT;
+
 
 -- 시퀀스 생성
 CREATE SEQUENCE SEQ_PRO
 NOCACHE;
 
+DROP SEQUENCE SEQ_PRO;
 
 
 -- 샘플 데이터 추가
@@ -93,10 +96,14 @@ CREATE TABLE TB_PRODETAIL
     STATUS CHAR(6) CHECK(STATUS IN ('입고', '출고'))
 );
 
+DROP TABLE TB_PRODETAIL;
 
 -- 이력번호로 매번 새로운 번호를 발생시켜서 들어갈 수 있게 도와주는 시퀀스 생성 (SEQ_DNO)
 CREATE SEQUENCE SEQ_DNO
 NOCACHE;
+
+DROP SEQUENCE SEQ_DNO;
+
 
 --------------------------- 트리거 정의 안했을 경우 ---------------------------------
 
@@ -176,14 +183,17 @@ BEGIN
 END;
 /
 
--- 'PRO_004' 상품이 오늘날짜로 7개 입고
-INSERT INTO TB_PRODETAIL VALUES (SEQ_DNO.NEXTVAL, 'PRO_004', SYSDATE, 7, '입고');
+-- 'PRO_001' 상품이 오늘날짜로 7개 입고
+INSERT INTO TB_PRODETAIL VALUES (SEQ_DNO.NEXTVAL, 'PRO_001', SYSDATE, 7, '입고');
 
--- 'PRO_005' 상품이 오늘날짜로 88개 출고
-INSERT INTO TB_PRODETAIL VALUES (SEQ_DNO.NEXTVAL, 'PRO_005', SYSDATE, 88, '출고');
+-- 'PRO_003' 상품이 오늘날짜로 88개 출고
+INSERT INTO TB_PRODETAIL VALUES (SEQ_DNO.NEXTVAL, 'PRO_003', SYSDATE, 88, '출고');
 
--- 'PRO_006' 상품이 오늘날짜로 17개 입고
-INSERT INTO TB_PRODETAIL VALUES (SEQ_DNO.NEXTVAL, 'PRO_006', SYSDATE, 17, '입고');
+-- 'PRO_003' 상품이 오늘날짜로 101개 입고
+INSERT INTO TB_PRODETAIL VALUES(SEQ_DNO.NEXTVAL, 'PRO_003', SYSDATE, 101, '입고');
+
+-- 'PRO_002' 상품이 오늘날짜로 17개 입고
+INSERT INTO TB_PRODETAIL VALUES (SEQ_DNO.NEXTVAL, 'PRO_002', SYSDATE, 17, '입고');
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
